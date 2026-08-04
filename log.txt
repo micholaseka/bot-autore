@@ -1,0 +1,190 @@
+PS C:\fb-marketplace-autobot> node .\src\test-open-conversation.js
+========================================
+      TEST OPEN CONVERSATION
+========================================
+
+[1] Membaca akun...
+Account : akun_01
+Profile : Profile 1
+
+[2] Membuka Chrome...
+=== BROWSER MANAGER ===
+Chrome: C:\fb-marketplace-autobot\GoogleChromePortable64\App\Chrome-bin\chrome.exe
+User Data: C:\fb-marketplace-autobot\GoogleChromePortable64\Data\profile
+Profile: Profile 1
+Chrome berhasil dibuka.
+Chrome berhasil dibuka.
+Jumlah page: 1
+URL awal: about:blank
+
+[3] Membuka Marketplace Dashboard...
+URL dashboard: https://www.facebook.com/marketplace/you/dashboard/
+
+[4] Mencari Inbox...
+Jumlah link Inbox: 1
+
+[5] Membuka Inbox...
+URL Inbox: https://www.facebook.com/marketplace/inbox/?targetTab=SELLER
+
+[6] Mencari percakapan Selvi...
+Total role=button: 20
+
+========================================
+CONVERSATION DITEMUKAN
+========================================
+Selvi
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+laptop masih ready banyak kak harga mulai 750rb ada mohon maaf karena jarang online Facebook lanjut wa saja ya kak @Selvi Mitra lebih cepat direspon tinggal klik saja WA : https://wa.me/6281223143330 atau kalo mau liat2 stock lain bisa cek katalog kami link Katalog WA kami: https://wa.me/c/132821863637230 Tiktok: https://www.tiktok.com/@raffa.computer . AutoResponder.ai
+10:51 AM
+
+[7] Scroll ke percakapan...
+
+[8] Mengklik percakapan Selvi...
+
+========================================
+SETELAH KLIK
+========================================
+URL: https://www.facebook.com/marketplace/inbox/?targetTab=SELLER
+
+========================================
+TEXT SETELAH MEMBUKA CHAT
+========================================
+ 
+Find friends
+Number of unread notifications
+20+
+Marketplace
+Browse Marketplace
+Browse all
+Notifications
+Inbox
+Marketplace access
+Buying
+Create new listing
+Location
+Suruhan, Jawa Timur, Indonesia
+ 
+ · Within 65 km
+Categories
+Vehicles
+Property Rentals
+Apparel
+Classifieds
+Electronics
+Entertainment
+Family
+Free Stuff
+Garden & Outdoor
+Hobbies
+Home Goods
+Home Improvement Supplies
+Home Sales
+Musical Instruments
+Office Supplies
+Pet Supplies
+Sporting Goods
+Toys & Games
+Buy and sell groups
+More
+Selling
+Buying
+Selvi
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+laptop masih ready banyak kak harga mulai 750rb ada mohon maaf karena jarang online Facebook lanjut wa saja ya kak @Selvi Mitra lebih cepat direspon tinggal klik saja WA : https://wa.me/6281223143330 atau kalo mau liat2 stock lain bisa cek katalog kami link Katalog WA kami: https://wa.me/c/132821863637230 Tiktok: https://www.tiktok.com/@raffa.computer . AutoResponder.ai
+10:51 AM
+Muhammad
+ 
+ · LAPTOP PELAJAR MURAH SLIM AXIOO MYBOOK 10 BATERAI AWET
+laptop masih ready banyak kak harga mulai 750rb ada mohon maaf karena jarang online Facebook lanjut wa saja ya kak @Muhammad Ainul lebih cepat direspon tinggal klik saja WA : https://wa.me/6281223143330 atau kalo mau liat2 stock lain bisa cek katalog kami link Katalog WA kami: https://wa.me/c/132821863637230 Tiktok: https://www.tiktok.com/@raffa.computer . AutoResponder.ai
+Mon
+YabisainAja
+ 
+ · LAPTOP SECOND MURAH DELL CORE i3 MULUS SEPERTI BARU
+sudah WA belum kak @YabisainAja Babat link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Sun
+Khalya
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+sudah WA belum kak @Khalya Well link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Sun
+Ali
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+sudah WA belum kak @Ali Masruri link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Sun
+Mutu
+ 
+ · LAPTOP SECOND MURAH DELL CORE i3 MULUS SEPERTI BARU
+sudah WA belum kak @Mutu Prima Corp link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Fri
+Haikal
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+sudah WA belum kak @Haikal Pauji link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Fri
+Adty
+ 
+ · LAPTOP SECOND MURAH DELL CORE i3 MULUS SEPERTI BARU
+sudah WA belum kak @Adty Pratama link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Fri
+Bimo
+ 
+ · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+sudah WA belum kak @Coko Bimo link nya bisa di klik atau error? atau no WA kakaknya berapa biar saya yang WA duluan
+Jul 25
+Selvi · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+Marketplace
+IDR275 – LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+View buyer
+More Options
+Messages
+Selvi · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+Enter, Conversation details
+Selvi started this chat. View buyer profile
+Enter, Message sent 9:31 AM by Selvi: Selvi started this chat.
+Selvi
+Kerusakan apa yaa
+Enter, Message sent 9:31 AM by Selvi: Kerusakan apa yaa
+Message sent
+Enter, Message sent 9:31 AM by Selvi
+10:51 AM
+laptop masih ready banyak kak
+harga mulai 750rb ada
+mohon maaf karena
+jarang online Facebook
+lanjut wa saja ya kak @Selvi Mitra
+lebih cepat direspon
+tinggal klik saja
+WA :
+https://wa.me/6281223143330
+
+atau kalo mau liat2 stock lain bisa cek katalog kami
+link Katalog WA kami:
+https://wa.me/c/132821863637230 
+
+Tiktok:
+https://www.tiktok.com/@raffa.computer
+
+
+.
+AutoResponder.ai
+wa.me
+wa.me
+Enter, Message sent 10:51 AM by You: laptop masih ready banyak kak harga mulai 750rb ada mohon maaf karena jarang online Facebook lanjut wa saja ya kak @Selvi Mitra lebih cepat direspon tinggal klik saja WA : https://wa.me/6281223143330 atau kalo mau liat2 stock lain bisa cek katalog kami link Katalog WA kami: https://wa.me/c/132821863637230 Tiktok: https://www.tiktok.com/@raffa.computer . AutoResponder.ai
+Compose
+Write to Selvi · LAPTOP WORKSTATION MURAH DELL XPS 15Z CORE i7 DUAL VGA
+
+
+
+
+Aa
+Loading messages
+
+========================================
+TEST OPEN CONVERSATION SELESAI
+========================================
+
+Browser dibiarkan terbuka.
+Tekan Ctrl + C untuk menghentikan.
