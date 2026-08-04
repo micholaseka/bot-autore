@@ -1,0 +1,15 @@
+{
+  "name": "fb-marketplace-autobot",
+  "version": "1.0.0",
+  "description": "Facebook Marketplace Auto Reply and Follow-Up Bot",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.2",
+    "node-cron": "^4.6.0",
+    "playwright": "^1.62.1"
+  }
+}
