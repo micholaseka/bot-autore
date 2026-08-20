@@ -12,19 +12,23 @@ export class BrowserManager {
 
   resolveProfilePath(profile) {
     const raw = String(profile);
-
-    // Absolute path: gunakan langsung.
-    if (path.isAbsolute(raw)) {
-      return raw;
-    }
-
-    // Relative path: berada di bawah profiles/.
+    if (path.isAbsolute(raw)) return raw;
     return path.resolve(CONFIG.chrome.profilesRoot, raw);
   }
 
-  async launchProfile(account) {
+  async launchProfile(accountOrProfile) {
     if (this.context) {
       throw new Error(`Browser masih aktif untuk akun ${this.accountId}.`);
+    }
+
+    // Kompatibel dengan API lama: launchProfile('account-001')
+    // dan API baru: launchProfile(account).
+    const account = typeof accountOrProfile === 'string'
+      ? { id: accountOrProfile, profile: accountOrProfile }
+      : accountOrProfile;
+
+    if (!account?.profile) {
+      throw new Error('Profile akun tidak ditemukan.');
     }
 
     const profilePath = this.resolveProfilePath(account.profile);
@@ -40,11 +44,11 @@ export class BrowserManager {
     }
 
     console.log('=== BROWSER MANAGER ===');
-    console.log(`Account : ${account.id}`);
+    console.log(`Account : ${account.id ?? account.profile}`);
     console.log(`Profile : ${profilePath}`);
 
     this.context = await chromium.launchPersistentContext(profilePath, launchOptions);
-    this.accountId = account.id;
+    this.accountId = account.id ?? account.profile;
     this.profilePath = profilePath;
 
     console.log('Browser profile berhasil dibuka.');
@@ -59,9 +63,7 @@ export class BrowserManager {
   }
 
   async close() {
-    if (!this.context) {
-      return;
-    }
+    if (!this.context) return;
 
     try {
       await this.context.close();
