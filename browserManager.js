@@ -1,47 +1,78 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { chromium } from 'playwright';
 import { CONFIG } from './config.js';
 
 export class BrowserManager {
   constructor() {
     this.context = null;
+    this.accountId = null;
+    this.profilePath = null;
   }
 
-  async launchProfile(profileName) {
+  resolveProfilePath(profile) {
+    const raw = String(profile);
+    if (path.isAbsolute(raw)) return raw;
+    return path.resolve(CONFIG.chrome.profilesRoot, raw);
+  }
+
+  async launchProfile(accountOrProfile) {
     if (this.context) {
-      throw new Error('Browser sudah berjalan.');
+      throw new Error(`Browser masih aktif untuk akun ${this.accountId}.`);
     }
 
-    const profilePath = profileName;
+    // Kompatibel dengan API lama: launchProfile('account-001')
+    // dan API baru: launchProfile(account).
+    const account = typeof accountOrProfile === 'string'
+      ? { id: accountOrProfile, profile: accountOrProfile }
+      : accountOrProfile;
+
+    if (!account?.profile) {
+      throw new Error('Profile akun tidak ditemukan.');
+    }
+
+    const profilePath = this.resolveProfilePath(account.profile);
+    fs.mkdirSync(profilePath, { recursive: true });
+
+    const launchOptions = {
+      headless: false,
+      timeout: 60000
+    };
+
+    if (CONFIG.chrome.executablePath) {
+      launchOptions.executablePath = CONFIG.chrome.executablePath;
+    }
 
     console.log('=== BROWSER MANAGER ===');
-    console.log('Chrome:', CONFIG.chrome.executablePath);
-    console.log('User Data:', CONFIG.chrome.userDataDir);
-    console.log('Profile:', profilePath);
+    console.log(`Account : ${account.id ?? account.profile}`);
+    console.log(`Profile : ${profilePath}`);
 
-    this.context = await chromium.launchPersistentContext(
-      CONFIG.chrome.userDataDir,
-      {
-        executablePath: CONFIG.chrome.executablePath,
-        headless: false,
-        args: [
-          `--profile-directory=${profilePath}`
-        ]
-      }
-    );
+    this.context = await chromium.launchPersistentContext(profilePath, launchOptions);
+    this.accountId = account.id ?? account.profile;
+    this.profilePath = profilePath;
 
-    console.log('Chrome berhasil dibuka.');
+    console.log('Browser profile berhasil dibuka.');
+    return this.context;
+  }
 
+  getContext() {
+    if (!this.context) {
+      throw new Error('Browser belum berjalan.');
+    }
     return this.context;
   }
 
   async close() {
-    if (!this.context) {
-      return;
+    if (!this.context) return;
+
+    try {
+      await this.context.close();
+    } finally {
+      this.context = null;
+      this.accountId = null;
+      this.profilePath = null;
     }
 
-    await this.context.close();
-    this.context = null;
-
-    console.log('Chrome ditutup.');
+    console.log('Browser ditutup.');
   }
 }

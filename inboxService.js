@@ -1,3 +1,4 @@
+import { CONFIG } from './config.js';
 
 export class InboxService {
   constructor(context) {
@@ -6,43 +7,84 @@ export class InboxService {
 
   async getPage() {
     const pages = this.context.pages();
-
-    if (pages.length > 0) {
-      return pages[0];
-    }
-
-    return await this.context.newPage();
+    return pages.length > 0 ? pages[0] : this.context.newPage();
   }
 
-  async inspectMarketplacePage() {
+  async openMarketplaceInbox() {
     const page = await this.getPage();
 
-    console.log('');
-    console.log('=== MARKETPLACE PAGE INSPECTOR ===');
+    await page.goto(CONFIG.marketplace.dashboardUrl, {
+      waitUntil: 'domcontentloaded',
+      timeout: CONFIG.phase1.pageTimeoutMs
+    });
 
-    console.log('URL:');
-    console.log(page.url());
+    await page.waitForTimeout(CONFIG.phase1.settleDelayMs);
 
-    console.log('');
-    console.log('TITLE:');
+    const inboxLocator = page.locator('a[href*="/marketplace/inbox/"]');
+    const linkCount = await inboxLocator.count();
 
-    const title = await page.title();
-    console.log(title);
+    if (linkCount === 0) {
+      throw new Error('Link inbox Marketplace tidak ditemukan di dashboard.');
+    }
 
-    console.log('');
-    console.log('VISIBLE TEXT:');
+    await inboxLocator.first().scrollIntoViewIfNeeded();
+    await inboxLocator.first().click();
+    await page.waitForTimeout(CONFIG.phase1.settleDelayMs);
 
-    const bodyText = await page.locator('body').innerText();
+    return page;
+  }
 
-    console.log(bodyText.substring(0, 15000));
+  async scanUnreadMessages() {
+    const page = await this.getPage();
+    const anchors = page.locator('a[href*="/marketplace/inbox/"]');
+    const count = await anchors.count();
+    const results = [];
 
-    console.log('');
-    console.log('=== INSPECTION SELESAI ===');
+    for (let index = 0; index < count; index += 1) {
+      const anchor = anchors.nth(index);
+      const href = await anchor.getAttribute('href');
+      const text = (await anchor.innerText().catch(() => '')).trim();
 
+      if (!href || !text) continue;
+
+      const unreadSignal = await anchor.evaluate(element => {
+        const nodes = [
+          element,
+          element.parentElement,
+          element.parentElement?.parentElement,
+          element.closest('[role="listitem"]')
+        ].filter(Boolean);
+
+        return nodes.some(node => {
+          const aria = node.getAttribute('aria-label') || '';
+          const testId = node.getAttribute('data-testid') || '';
+          const className = typeof node.className === 'string' ? node.className : '';
+          const style = window.getComputedStyle(node);
+
+          // Conservative signal only. We do not infer unread from arbitrary bold text.
+          return /unread|belum\s*dibaca/i.test(`${aria} ${testId} ${className}`)
+            || /700|bold/i.test(style.fontWeight) && /unread|belum\s*dibaca/i.test(`${aria} ${testId}`);
+        });
+      });
+
+      if (!unreadSignal) continue;
+
+      results.push({
+        sender: text.split('\n')[0]?.trim() || 'Unknown',
+        text: text.slice(0, 2000),
+        href: new URL(href, page.url()).href
+      });
+    }
+
+    return results;
+  }
+
+  async inspectPage() {
+    const page = await this.getPage();
     return {
       url: page.url(),
-      title,
-      bodyText
+      title: await page.title(),
+      bodyText: (await page.locator('body').innerText()).slice(0, 15000)
     };
   }
 }
