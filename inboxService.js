@@ -1,12 +1,5 @@
 import { CONFIG } from './config.js';
 
-const UNREAD_SELECTORS = [
-  '[aria-label*="unread" i]',
-  '[aria-label*="belum dibaca" i]',
-  '[data-testid*="unread" i]',
-  '[data-testid*="notification" i]'
-];
-
 export class InboxService {
   constructor(context) {
     this.context = context;
@@ -27,16 +20,15 @@ export class InboxService {
 
     await page.waitForTimeout(CONFIG.phase1.settleDelayMs);
 
-    const inboxLink = page.locator('a[href*="/marketplace/inbox/"]').first();
-    const linkCount = await page.locator('a[href*="/marketplace/inbox/"]').count();
+    const inboxLocator = page.locator('a[href*="/marketplace/inbox/"]');
+    const linkCount = await inboxLocator.count();
 
     if (linkCount === 0) {
       throw new Error('Link inbox Marketplace tidak ditemukan di dashboard.');
     }
 
-    await inboxLink.scrollIntoViewIfNeeded();
-    await inboxLink.click();
-
+    await inboxLocator.first().scrollIntoViewIfNeeded();
+    await inboxLocator.first().click();
     await page.waitForTimeout(CONFIG.phase1.settleDelayMs);
 
     return page;
@@ -44,55 +36,47 @@ export class InboxService {
 
   async scanUnreadMessages() {
     const page = await this.getPage();
+    const anchors = page.locator('a[href*="/marketplace/inbox/"]');
+    const count = await anchors.count();
+    const results = [];
 
-    // Jangan menganggap semua chat sebagai unread.
-    // Hanya elemen yang punya sinyal unread yang cukup jelas yang dikembalikan.
-    const candidates = await page.locator(
-      [
-        ...UNREAD_SELECTORS,
-        'a[href*="/marketplace/inbox/"]'
-      ].join(',')
-    ).evaluateAll(elements => {
-      const result = [];
-      const seen = new Set();
+    for (let index = 0; index < count; index += 1) {
+      const anchor = anchors.nth(index);
+      const href = await anchor.getAttribute('href');
+      const text = (await anchor.innerText().catch(() => '')).trim();
 
-      for (const element of elements) {
-        const text = (element.innerText || '').trim();
-        const href = element.href || element.getAttribute('href') || '';
-        const aria = element.getAttribute('aria-label') || '';
-        const testId = element.getAttribute('data-testid') || '';
-        const className = typeof element.className === 'string' ? element.className : '';
+      if (!href || !text) continue;
 
-        const unreadSignal = /unread|belum\s*dibaca/i.test(
-          `${aria} ${testId} ${className}`
-        );
+      const unreadSignal = await anchor.evaluate(element => {
+        const nodes = [
+          element,
+          element.parentElement,
+          element.parentElement?.parentElement,
+          element.closest('[role="listitem"]')
+        ].filter(Boolean);
 
-        const hasInboxHref = /\/marketplace\/inbox\//i.test(href);
+        return nodes.some(node => {
+          const aria = node.getAttribute('aria-label') || '';
+          const testId = node.getAttribute('data-testid') || '';
+          const className = typeof node.className === 'string' ? node.className : '';
+          const style = window.getComputedStyle(node);
 
-        if (!unreadSignal || !hasInboxHref || !text) {
-          continue;
-        }
-
-        const key = href || text;
-        if (seen.has(key)) continue;
-        seen.add(key);
-
-        result.push({
-          sender: text.split('\n')[0]?.trim() || 'Unknown',
-          text,
-          href,
-          detectedBy: {
-            aria,
-            testId,
-            className
-          }
+          // Conservative signal only. We do not infer unread from arbitrary bold text.
+          return /unread|belum\s*dibaca/i.test(`${aria} ${testId} ${className}`)
+            || /700|bold/i.test(style.fontWeight) && /unread|belum\s*dibaca/i.test(`${aria} ${testId}`);
         });
-      }
+      });
 
-      return result;
-    });
+      if (!unreadSignal) continue;
 
-    return candidates;
+      results.push({
+        sender: text.split('\n')[0]?.trim() || 'Unknown',
+        text: text.slice(0, 2000),
+        href: new URL(href, page.url()).href
+      });
+    }
+
+    return results;
   }
 
   async inspectPage() {
