@@ -4,36 +4,40 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Root folder project
-const PROJECT_ROOT = path.resolve(__dirname, '..');
+export const PROJECT_ROOT = path.resolve(__dirname, '..');
 
-// Chrome Portable
-const CHROME_PORTABLE_DIR = path.join(
-  PROJECT_ROOT,
-  'GoogleChromePortable64'
-);
+// Setiap akun punya browser profile sendiri.
+const PROFILES_ROOT = path.join(PROJECT_ROOT, 'profiles');
 
-// Chrome executable
-const CHROME_EXECUTABLE = path.join(
-  CHROME_PORTABLE_DIR,
-  'App',
-  'Chrome-bin',
-  'chrome.exe'
-);
-
-// Chrome user data
-const CHROME_USER_DATA_DIR = path.join(
-  CHROME_PORTABLE_DIR,
-  'Data',
-  'profile'
-);
+// Override dengan CHROME_EXECUTABLE bila Chrome berada di lokasi lain.
+const CHROME_EXECUTABLE =
+  process.env.CHROME_EXECUTABLE ||
+  (process.platform === 'win32'
+    ? path.join(PROJECT_ROOT, 'GoogleChromePortable64', 'App', 'Chrome-bin', 'chrome.exe')
+    : '');
 
 export const CONFIG = {
   projectRoot: PROJECT_ROOT,
 
+  accounts: {
+    file: path.join(PROJECT_ROOT, 'config', 'accounts.json')
+  },
+
   chrome: {
-    portableDir: CHROME_PORTABLE_DIR,
-    executablePath: CHROME_EXECUTABLE,
-    userDataDir: CHROME_USER_DATA_DIR,
+    profilesRoot: PROFILES_ROOT,
+    executablePath: CHROME_EXECUTABLE
+  },
+
+  marketplace: {
+    dashboardUrl: 'https://www.facebook.com/marketplace/you/dashboard',
+    inboxUrlPrefix: 'https://www.facebook.com/marketplace/inbox/'
+  },
+
+  phase1: {
+    // Fase 1 sengaja single-worker.
+    maxAccountsPerCycle: 5,
+    settleDelayMs: 2500,
+    accountCooldownMs: 1000,
+    pageTimeoutMs: 60000
   }
 };
